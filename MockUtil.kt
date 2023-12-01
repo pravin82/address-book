@@ -1,3 +1,4 @@
+import service.AddressService
 import kotlin.random.Random
 
 class MockUtil(val addressService: AddressService) {

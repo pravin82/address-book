@@ -1,4 +1,7 @@
-import kotlin.random.Random
+package service
+
+import AddressDTO
+import repository.AddressRepository
 
 class AddressService(private val addressRepository: AddressRepository) {
     fun addAddress(addressDTO: AddressDTO):String{
