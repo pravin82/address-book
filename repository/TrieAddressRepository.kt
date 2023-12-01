@@ -39,9 +39,9 @@ class TrieAddressRepository:AddressRepository {
 
     }
 
-    override fun searchAddressByName(namePrefix: String): List<AddressDTO> {
+    override fun searchAddressByName(name: String): List<AddressDTO> {
         var node = nameTrieRoot
-        for (char in namePrefix.lowercase()) {
+        for (char in name.lowercase()) {
             node = node.children.get(char) ?: return emptyList()
         }
         return collectAddressList(node)
