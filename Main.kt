@@ -2,6 +2,8 @@ import java.util.*
 
 fun main(){
     val scanner = Scanner(System.`in`)
+    val trieAddressRepository = TrieAddressRepository()
+    val addressService = AddressService(trieAddressRepository)
 
     while (true) {
         println("\n1. Add Address Detail")
@@ -29,6 +31,7 @@ fun main(){
                     address,
                     phoneNumber
                 )
+                addressService.addAddress(addressDTO)
 
                 println("Detail added successfully!. Detail:${addressDTO}")
             }
