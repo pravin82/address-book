@@ -1,6 +1,12 @@
 import com.sun.net.httpserver.Authenticator.Success
 import java.util.*
 
+data  class TrieNode(
+    val children:MutableMap<Char, TrieNode>,
+    var addressDTO: AddressDTO?
+)
+
+
 class TrieAddressRepository:AddressRepository {
     private val nameTrieRoot = TrieNode(emptyMap<Char,TrieNode>().toMutableMap(),null)
     private val phoneTrieRoot = TrieNode(emptyMap<Char,TrieNode>().toMutableMap(),null)
@@ -15,7 +21,7 @@ class TrieAddressRepository:AddressRepository {
     private fun addAddressInNameTrie(addressDTO: AddressDTO){
         var node = nameTrieRoot
         val fullName = "${addressDTO.firstName} ${addressDTO.lastName}"
-        for (char in fullName.lowercase(Locale.getDefault())) {
+        for (char in fullName.lowercase()) {
             node = node.children.getOrPut(char) { TrieNode(emptyMap<Char,TrieNode>().toMutableMap(),null) }
         }
         node.addressDTO = addressDTO
@@ -30,18 +36,32 @@ class TrieAddressRepository:AddressRepository {
 
     }
 
-    override fun searchAddressByName(name: String): List<AddressDTO> {
-        TODO("Not yet implemented")
+    override fun searchAddressByName(namePrefix: String): List<AddressDTO> {
+        var node = nameTrieRoot
+        for (char in namePrefix.lowercase()) {
+            node = node.children.get(char) ?: return emptyList()
+        }
+        return collectAddressList(node)
     }
 
-    override fun searchAddressByPhone(name: String): List<AddressDTO> {
-        TODO("Not yet implemented")
+    private fun collectAddressList(node:TrieNode):List<AddressDTO>{
+        val results = mutableListOf<AddressDTO>()
+        if(node.addressDTO != null) results.add(node.addressDTO!!)
+        node.children.map{
+            results.addAll(collectAddressList(it.value))
+        }
+        return results
     }
+
+    override fun searchAddressByPhone(phone: String): List<AddressDTO> {
+        var node = phoneTrieRoot
+        for (char in phone.lowercase()){
+            node = node.children.get(char) ?: return emptyList()
+        }
+       return collectAddressList(node)
+    }
+
 
 }
 
-data  class TrieNode(
-    val children:MutableMap<Char, TrieNode>,
-    var addressDTO: AddressDTO?
-)
 

@@ -1,3 +1,5 @@
+import kotlin.random.Random
+
 class AddressService(private val addressRepository: AddressRepository) {
     fun addAddress(addressDTO: AddressDTO):String{
       return  addressRepository.addAddress(addressDTO)
@@ -5,4 +7,9 @@ class AddressService(private val addressRepository: AddressRepository) {
     fun searchAddressByName(namePrefix:String):List<AddressDTO>{
         return addressRepository.searchAddressByName(namePrefix)
     }
+
+    fun searchAddressByPhone(phonePrefix: String):List<AddressDTO>{
+        return addressRepository.searchAddressByPhone(phonePrefix)
+    }
+
 }
